@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37111.16 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Readora.API", "Readora.API\Readora.API.csproj", "{AB7439BF-6A51-4EC2-89F8-52EF34696FD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Readora.Application", "Readora.Application\Readora.Application.csproj", "{14977211-F655-4696-ACE7-A5AC40AD0242}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Readora.Domain", "Readora.Domain\Readora.Domain.csproj", "{68AF609B-CBBE-482F-8F28-48422EC3E858}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Readora.Infrastructure", "Readora.Infrastructure\Readora.Infrastructure.csproj", "{13CDE946-B1DD-46FC-BED6-237AAF3A7924}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB7439BF-6A51-4EC2-89F8-52EF34696FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB7439BF-6A51-4EC2-89F8-52EF34696FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB7439BF-6A51-4EC2-89F8-52EF34696FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB7439BF-6A51-4EC2-89F8-52EF34696FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14977211-F655-4696-ACE7-A5AC40AD0242}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14977211-F655-4696-ACE7-A5AC40AD0242}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14977211-F655-4696-ACE7-A5AC40AD0242}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14977211-F655-4696-ACE7-A5AC40AD0242}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68AF609B-CBBE-482F-8F28-48422EC3E858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68AF609B-CBBE-482F-8F28-48422EC3E858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68AF609B-CBBE-482F-8F28-48422EC3E858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68AF609B-CBBE-482F-8F28-48422EC3E858}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13CDE946-B1DD-46FC-BED6-237AAF3A7924}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13CDE946-B1DD-46FC-BED6-237AAF3A7924}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13CDE946-B1DD-46FC-BED6-237AAF3A7924}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13CDE946-B1DD-46FC-BED6-237AAF3A7924}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E457F22-8825-4B54-8AAE-FBAA8BE6AECE}
+	EndGlobalSection
+EndGlobal
