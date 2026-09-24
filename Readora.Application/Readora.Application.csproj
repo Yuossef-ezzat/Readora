@@ -6,7 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="MediatR" Version="14.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
     <ProjectReference Include="..\Readora.Domain\Readora.Domain.csproj" />
   </ItemGroup>
 

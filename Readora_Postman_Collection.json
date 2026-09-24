@@ -1,0 +1,823 @@
+{
+  "info": {
+    "name": "Readora API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://localhost:5001",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register (Public)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"member@example.com\",\n  \"password\": \"Password123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Auth", "register"]
+            },
+            "description": "🔓 Public - Creates a new Member account."
+          }
+        },
+        {
+          "name": "Create Librarian (Admin only)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Library\",\n  \"lastName\": \"Staff\",\n  \"email\": \"librarian@example.com\",\n  \"password\": \"Password123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Auth/create-librarian",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Auth", "create-librarian"]
+            },
+            "description": "🔒 Requires: Admin — Creates a new Librarian account."
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) pm.collectionVariables.set(\"access_token\", jsonData.token);",
+                  "if (jsonData.refreshToken) pm.collectionVariables.set(\"refresh_token\", jsonData.refreshToken);",
+                  "console.log(\"✅ Tokens saved!\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"member@example.com\",\n  \"password\": \"Password123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Auth", "login"]
+            },
+            "description": "🔓 Public - Token is auto-saved to collection variables after login."
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) pm.collectionVariables.set(\"access_token\", jsonData.token);",
+                  "if (jsonData.refreshToken) pm.collectionVariables.set(\"refresh_token\", jsonData.refreshToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Auth/refresh-token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Auth", "refresh-token"]
+            },
+            "description": "🔓 Public - Use the saved refresh_token to get a new access_token."
+          }
+        },
+        {
+          "name": "Revoke Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Auth/revoke-token?token={{refresh_token}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Auth", "revoke-token"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{refresh_token}}"
+                }
+              ]
+            },
+            "description": "🔒 Requires: Any authenticated user."
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\"member@example.com\"",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Auth", "forgot-password"]
+            },
+            "description": "🔓 Public - Sends OTP to email. Body is a plain JSON string."
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"member@example.com\",\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Auth/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Auth", "verify-otp"]
+            },
+            "description": "🔓 Public - Verifies OTP before resetting password."
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"member@example.com\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"NewPassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Auth", "reset-password"]
+            },
+            "description": "🔓 Public - Resets the password using the verified OTP."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authors",
+      "item": [
+        {
+          "name": "Get All Authors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Authors?page=1&pageSize=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Authors"],
+              "query": [
+                { "key": "searchTerm", "value": "", "disabled": true },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Get Author by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Authors/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Authors", "1"]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Create Author (Admin/Librarian)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Austen\",\n  \"bio\": \"English novelist known for her novels.\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Authors",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Authors"]
+            },
+            "description": "🔒 Requires: Admin or Librarian"
+          }
+        },
+        {
+          "name": "Update Author (Admin/Librarian)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"name\": \"Jane Austen Updated\",\n  \"bio\": \"Famous English novelist.\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Authors/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Authors", "1"]
+            },
+            "description": "🔒 Requires: Admin or Librarian"
+          }
+        },
+        {
+          "name": "Delete Author (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Authors/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Authors", "1"]
+            },
+            "description": "🔒 Requires: Admin only"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Categories?page=1&pageSize=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Categories"],
+              "query": [
+                { "key": "searchTerm", "value": "", "disabled": true },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Categories", "1"]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Create Category (Admin/Librarian)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Science Fiction\",\n  \"description\": \"Books related to science fiction and futurism.\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Categories"]
+            },
+            "description": "🔒 Requires: Admin or Librarian"
+          }
+        },
+        {
+          "name": "Update Category (Admin/Librarian)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"name\": \"Sci-Fi\",\n  \"description\": \"Science fiction and speculative fiction.\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Categories", "1"]
+            },
+            "description": "🔒 Requires: Admin or Librarian"
+          }
+        },
+        {
+          "name": "Delete Category (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Categories", "1"]
+            },
+            "description": "🔒 Requires: Admin only"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Books",
+      "item": [
+        {
+          "name": "Get All Books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Books?page=1&pageSize=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Books"],
+              "query": [
+                { "key": "searchTerm", "value": "", "disabled": true },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Get Book by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Books/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Books", "1"]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Create Book (Admin/Librarian)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pride and Prejudice\",\n  \"isbn\": \"978-0-14-143951-8\",\n  \"description\": \"A classic novel of manners.\",\n  \"publishedDate\": \"1813-01-28T00:00:00Z\",\n  \"authorId\": 1,\n  \"categoryId\": 1\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Books",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Books"]
+            },
+            "description": "🔒 Requires: Admin or Librarian — authorId and categoryId must exist."
+          }
+        },
+        {
+          "name": "Update Book (Admin/Librarian)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Pride and Prejudice (Updated)\",\n  \"isbn\": \"978-0-14-143951-8\",\n  \"description\": \"Updated description.\",\n  \"publishedDate\": \"1813-01-28T00:00:00Z\",\n  \"authorId\": 1,\n  \"categoryId\": 1\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Books/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Books", "1"]
+            },
+            "description": "🔒 Requires: Admin or Librarian — id in URL must match id in body."
+          }
+        },
+        {
+          "name": "Delete Book (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Books/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Books", "1"]
+            },
+            "description": "🔒 Requires: Admin only"
+          }
+        },
+        {
+          "name": "Upload Cover Image (Admin/Librarian)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Select an image file (jpg, png, etc.)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Books/1/upload-cover",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Books", "1", "upload-cover"]
+            },
+            "description": "🔒 Requires: Admin or Librarian — Send as form-data with key 'file'."
+          }
+        },
+        {
+          "name": "Upload PDF (Admin/Librarian)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Select a PDF file"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Books/1/upload-pdf",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Books", "1", "upload-pdf"]
+            },
+            "description": "🔒 Requires: Admin or Librarian — Send as form-data with key 'file'."
+          }
+        }
+      ]
+    },
+    {
+      "name": "BookCopies",
+      "item": [
+        {
+          "name": "Get Copy by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/BookCopies/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "BookCopies", "1"]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Get Copies by Book ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/BookCopies/book/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "BookCopies", "book", "1"]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Create Copy (Admin/Librarian)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookId\": 1,\n  \"status\": 1\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/BookCopies",
+              "host": ["{{base_url}}"],
+              "path": ["api", "BookCopies"]
+            },
+            "description": "🔒 Requires: Admin or Librarian — status: 1=Available, 2=Borrowed"
+          }
+        },
+        {
+          "name": "Update Copy (Admin/Librarian)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"status\": 2\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/BookCopies/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "BookCopies", "1"]
+            },
+            "description": "🔒 Requires: Admin or Librarian"
+          }
+        },
+        {
+          "name": "Delete Copy (Admin only)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/BookCopies/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "BookCopies", "1"]
+            },
+            "description": "🔒 Requires: Admin only"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Borrowings",
+      "item": [
+        {
+          "name": "Get Borrowing by ID (Admin/Librarian)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Borrowings/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Borrowings", "1"]
+            },
+            "description": "🔒 Requires: Admin or Librarian"
+          }
+        },
+        {
+          "name": "Get My Borrowings (Member)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Borrowings/my-borrowings",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Borrowings", "my-borrowings"]
+            },
+            "description": "🔒 Requires: Any authenticated user"
+          }
+        },
+        {
+          "name": "Borrow Book (Member)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$guid}}",
+                "description": "Unique key per request to prevent duplicate borrowing"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/Borrowings/borrow/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Borrowings", "borrow", "1"]
+            },
+            "description": "🔒 Requires: Member — Replace '1' with the bookId. Idempotency-Key prevents duplicate requests."
+          }
+        },
+        {
+          "name": "Return Book (Admin/Librarian)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$guid}}",
+                "description": "Unique key per request to prevent duplicate returns"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/Borrowings/return/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Borrowings", "return", "1"]
+            },
+            "description": "🔒 Requires: Admin or Librarian — Replace '1' with the borrowingId."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Get Reviews by Book ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Reviews/book/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Reviews", "book", "1"]
+            },
+            "description": "🔓 Public"
+          }
+        },
+        {
+          "name": "Add Review (Authenticated)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookId\": 1,\n  \"userId\": 1,\n  \"rating\": 5,\n  \"comment\": \"Amazing read!\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Reviews",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Reviews"]
+            },
+            "description": "🔒 Requires: Authenticated user — userId in body must match your logged-in user ID."
+          }
+        },
+        {
+          "name": "Update Review (Owner)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"userId\": 1,\n  \"rating\": 4,\n  \"comment\": \"Good, but could be better.\"\n}",
+              "options": {
+                "raw": { "language": "json" }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/Reviews/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Reviews", "1"]
+            },
+            "description": "🔒 Requires: Authenticated user — Can only update your own review. userId must match logged-in user."
+          }
+        },
+        {
+          "name": "Delete Review (Owner or Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Reviews/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Reviews", "1"]
+            },
+            "description": "🔒 Requires: Authenticated user — Owners can delete their own, Admin can delete any."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wishlists",
+      "item": [
+        {
+          "name": "Get My Wishlist (Member)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Wishlists/my-wishlist",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Wishlists", "my-wishlist"]
+            },
+            "description": "🔒 Requires: Member"
+          }
+        },
+        {
+          "name": "Add to Wishlist (Member)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Wishlists/add/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Wishlists", "add", "1"]
+            },
+            "description": "🔒 Requires: Member — Replace '1' with bookId."
+          }
+        },
+        {
+          "name": "Remove from Wishlist (Member)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/Wishlists/remove/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "Wishlists", "remove", "1"]
+            },
+            "description": "🔒 Requires: Member — Replace '1' with bookId."
+          }
+        }
+      ]
+    }
+  ]
+}
