@@ -140,18 +140,14 @@ public class AuthService : IAuthService
             return Result.Success();
         }
 
-        var otp = await _otpService.GenerateAndStoreOtpAsync(email);
-        await _emailService.SendEmailAsync(email, "Readora - Password Reset", $"Your password reset code is: {otp}. It will expire in 10 minutes.");
-        
-        return Result.Success();
-    }
-
-    public async Task<Result> VerifyOtpAsync(VerifyOtpRequestDto request)
-    {
-        if (!await _otpService.VerifyOtpAsync(request.Email, request.Otp))
+        var otpResult = await _otpService.GenerateAndStoreOtpAsync(email);
+        if (otpResult.IsFailure)
         {
-            return Result.Failure(Error.Validation("Auth.InvalidOtp", "Invalid or expired OTP."));
+            return Result.Failure(otpResult.Error);
         }
+
+        await _emailService.SendEmailAsync(email, "Readora - Password Reset", $"Your password reset code is: {otpResult.Value}. It will expire in 5 minutes.");
+        
         return Result.Success();
     }
 
@@ -163,9 +159,10 @@ public class AuthService : IAuthService
             return Result.Failure(Error.NotFound("Auth.UserNotFound", "User not found."));
         }
 
-        if (!await _otpService.VerifyOtpAsync(request.Email, request.Otp))
+        var otpResult = await _otpService.VerifyOtpAsync(request.Email, request.Otp);
+        if (otpResult.IsFailure)
         {
-            return Result.Failure(Error.Validation("Auth.InvalidOtp", "Invalid or expired OTP."));
+            return Result.Failure(otpResult.Error);
         }
 
         var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);

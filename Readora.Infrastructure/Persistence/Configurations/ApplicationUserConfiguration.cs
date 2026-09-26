@@ -10,9 +10,9 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 {
 	public void Configure(EntityTypeBuilder<ApplicationUser> builder)
 	{
-		builder.Property<string>((Expression<Func<ApplicationUser, string>>)((ApplicationUser u) => u.FirstName)).IsRequired(true).HasMaxLength(50);
-		builder.Property<string>((Expression<Func<ApplicationUser, string>>)((ApplicationUser u) => u.LastName)).IsRequired(true).HasMaxLength(50);
-		builder.HasOne<Wishlist>((Expression<Func<ApplicationUser, Wishlist>>)((ApplicationUser u) => u.Wishlist)).WithOne((Expression<Func<Wishlist, ApplicationUser>>)((Wishlist w) => w.User)).HasForeignKey<Wishlist>((Expression<Func<Wishlist, object>>)((Wishlist w) => w.UserId))
+		builder.Property(u => u.FirstName).IsRequired(true).HasMaxLength(50);
+		builder.Property(u => u.LastName).IsRequired(true).HasMaxLength(50);
+		builder.HasOne( u => u.Wishlist).WithOne(w => w.User).HasForeignKey<Wishlist>(w => w.UserId)
 			.OnDelete((DeleteBehavior)3);
 	}
 }

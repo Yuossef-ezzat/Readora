@@ -22,14 +22,14 @@ public class BorrowBookCommandHandler : IRequestHandler<BorrowBookCommand, Resul
 
 	public async Task<Result<int>> Handle(BorrowBookCommand request, CancellationToken cancellationToken)
 	{
-		BookCopy copy = (await _unitOfWork.Repository<BookCopy>().ListAsync(new AvailableBookCopySpecification(request.BookId), cancellationToken)).FirstOrDefault();
+		var copy = (await _unitOfWork.Repository<BookCopy>().ListAsync(new AvailableBookCopySpecification(request.BookId), cancellationToken)).FirstOrDefault();
 		if (copy == null)
 		{
 			return Result.Failure<int>(Error.Validation("Borrowings.NoCopyAvailable", "No available copies for this book."));
 		}
 		copy.Status = BookCopyStatus.Borrowed;
 		_unitOfWork.Repository<BookCopy>().Update(copy);
-		Borrowing borrowing = new Borrowing
+		var borrowing = new Borrowing
 		{
 			UserId = request.UserId,
 			BookCopyId = copy.Id,

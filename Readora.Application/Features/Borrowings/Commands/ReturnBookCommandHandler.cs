@@ -21,7 +21,7 @@ public class ReturnBookCommandHandler : IRequestHandler<ReturnBookCommand, Resul
 
 	public async Task<Result> Handle(ReturnBookCommand request, CancellationToken cancellationToken)
 	{
-		Borrowing borrowing = await _unitOfWork.Repository<Borrowing>().GetByIdAsync(request.BorrowingId, cancellationToken);
+		var borrowing = await _unitOfWork.Repository<Borrowing>().GetByIdAsync(request.BorrowingId, cancellationToken);
 		if (borrowing == null)
 		{
 			return Result.Failure(Error.NotFound("Borrowings.NotFound", "Borrowing record not found."));
@@ -30,7 +30,7 @@ public class ReturnBookCommandHandler : IRequestHandler<ReturnBookCommand, Resul
 		{
 			return Result.Failure(Error.Validation("Borrowings.NotActive", "This borrowing is already completed or cancelled."));
 		}
-		BookCopy copy = await _unitOfWork.Repository<BookCopy>().GetByIdAsync(borrowing.BookCopyId, cancellationToken);
+		var copy = await _unitOfWork.Repository<BookCopy>().GetByIdAsync(borrowing.BookCopyId, cancellationToken);
 		if (copy == null)
 		{
 			return Result.Failure(Error.NotFound("BookCopies.NotFound", "Book copy not found."));

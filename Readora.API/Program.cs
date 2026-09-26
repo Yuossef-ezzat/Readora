@@ -14,6 +14,7 @@ using Readora.API.Services;
 using Readora.Application;
 using Readora.Application.Interfaces.Services;
 using Readora.Infrastructure;
+using Readora.Infrastructure.Persistence;
 using Serilog;
 using Serilog.AspNetCore;
 using Serilog.Core;
@@ -63,7 +64,7 @@ public class Program
 			WebApplication app = builder.Build();
 			
 			// Seed database
-			Readora.Infrastructure.Persistence.DatabaseSeeder.SeedRolesAsync(app.Services).GetAwaiter().GetResult();
+			DatabaseSeeder.SeedAllAsync(app.Services).GetAwaiter().GetResult();
 
 			app.UseSerilogRequestLogging();
 			app.UseMiddleware<GlobalExceptionMiddleware>();

@@ -18,7 +18,7 @@ public class UpdateReviewCommandHandler : IRequestHandler<UpdateReviewCommand, R
 
 	public async Task<Result> Handle(UpdateReviewCommand request, CancellationToken cancellationToken)
 	{
-		Review review = await _unitOfWork.Repository<Review>().GetByIdAsync(request.Id, cancellationToken);
+		var review = await _unitOfWork.Repository<Review>().GetByIdAsync(request.Id, cancellationToken);
 		if (review == null)
 		{
 			return Result.Failure(Error.NotFound("Reviews.NotFound", "Review not found."));

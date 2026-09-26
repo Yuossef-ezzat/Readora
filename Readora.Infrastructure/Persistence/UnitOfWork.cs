@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Readora.Application.Common.Exceptions;
@@ -13,102 +9,106 @@ namespace Readora.Infrastructure.Persistence;
 
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
-	private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
+    private readonly Dictionary<Type, object> _repositories = new();
 
-	private Hashtable? _repositories;
+    private IDbContextTransaction? _currentTransaction;
 
-	private IDbContextTransaction? _currentTransaction;
+    public UnitOfWork(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
 
-	public UnitOfWork(ApplicationDbContext dbContext)
-	{
-		_dbContext = dbContext;
-	}
+    public IGenericRepository<TEntity> Repository<TEntity>()
+        where TEntity : BaseEntity
+    {
+        var type = typeof(TEntity);
 
-	public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
-	{
-		if (_repositories == null)
-		{
-			_repositories = new Hashtable();
-		}
-		string type = typeof(TEntity).Name;
-		if (!_repositories.ContainsKey(type))
-		{
-			Type repositoryType = typeof(GenericRepository<>);
-			object repositoryInstance = Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), _dbContext);
-			_repositories.Add(type, repositoryInstance);
-		}
-		return (IGenericRepository<TEntity>)_repositories[type];
-	}
+        if (!_repositories.TryGetValue(type, out var repository))
+        {
+            repository = new GenericRepository<TEntity>(_dbContext);
+            _repositories[type] = repository;
+        }
 
-	public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
-	{
-		try
-		{
-			return await ((DbContext)_dbContext).SaveChangesAsync(cancellationToken);
-		}
-		catch (DbUpdateConcurrencyException ex)
-		{
-			DbUpdateConcurrencyException ex2 = ex;
-			DbUpdateConcurrencyException ex3 = ex2;
-			throw new ConcurrencyException("A concurrency error occurred.", (Exception)(object)ex3);
-		}
-	}
+        return (IGenericRepository<TEntity>)repository;
+    }
 
-	public async Task BeginTransactionAsync(CancellationToken cancellationToken = default(CancellationToken))
-	{
-		if (_currentTransaction == null)
-		{
-			_currentTransaction = await ((DbContext)_dbContext).Database.BeginTransactionAsync(cancellationToken);
-		}
-	}
+    public async Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            throw new ConcurrencyException(
+                "A concurrency error occurred.",
+                ex);
+        }
+    }
 
-	public async Task CommitTransactionAsync(CancellationToken cancellationToken = default(CancellationToken))
-	{
-		try
-		{
-			await SaveChangesAsync(cancellationToken);
-			if (_currentTransaction != null)
-			{
-				await _currentTransaction.CommitAsync(cancellationToken);
-			}
-		}
-		catch
-		{
-			await RollbackTransactionAsync(cancellationToken);
-			throw;
-		}
-		finally
-		{
-			if (_currentTransaction != null)
-			{
-				((IDisposable)_currentTransaction).Dispose();
-				_currentTransaction = null;
-			}
-		}
-	}
+    public async Task BeginTransactionAsync(
+        CancellationToken cancellationToken = default)
+    {
+        if (_currentTransaction is null)
+        {
+            _currentTransaction =
+                await _dbContext.Database.BeginTransactionAsync(
+                    cancellationToken);
+        }
+    }
 
-	public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default(CancellationToken))
-	{
-		try
-		{
-			if (_currentTransaction != null)
-			{
-				await _currentTransaction.RollbackAsync(cancellationToken);
-			}
-		}
-		finally
-		{
-			if (_currentTransaction != null)
-			{
-				((IDisposable)_currentTransaction).Dispose();
-				_currentTransaction = null;
-			}
-		}
-	}
+    public async Task CommitTransactionAsync(
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await SaveChangesAsync(cancellationToken);
 
-	public void Dispose()
-	{
-		((DbContext)_dbContext).Dispose();
-		((IDisposable)_currentTransaction)?.Dispose();
-	}
+            if (_currentTransaction is not null)
+            {
+                await _currentTransaction.CommitAsync(cancellationToken);
+            }
+        }
+        catch
+        {
+            await RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
+        finally
+        {
+            if (_currentTransaction is not null)
+            {
+                await _currentTransaction.DisposeAsync();
+                _currentTransaction = null;
+            }
+        }
+    }
+
+    public async Task RollbackTransactionAsync(
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            if (_currentTransaction is not null)
+            {
+                await _currentTransaction.RollbackAsync(cancellationToken);
+            }
+        }
+        finally
+        {
+            if (_currentTransaction is not null)
+            {
+                await _currentTransaction.DisposeAsync();
+                _currentTransaction = null;
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        _currentTransaction?.Dispose();
+        _dbContext.Dispose();
+    }
 }

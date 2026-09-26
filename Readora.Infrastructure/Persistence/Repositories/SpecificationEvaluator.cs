@@ -12,13 +12,14 @@ public class SpecificationEvaluator<TEntity> where TEntity : BaseEntity
 	public static IQueryable<TEntity> GetQuery(IQueryable<TEntity> inputQuery, ISpecification<TEntity> spec)
 	{
 		IQueryable<TEntity> query = inputQuery;
+
 		if (spec.Criteria != null)
 		{
 			query = query.Where(spec.Criteria);
 		}
 		foreach (Expression<Func<TEntity, object>> include in spec.Includes)
 		{
-			query = (IQueryable<TEntity>)EntityFrameworkQueryableExtensions.Include<TEntity, object>(query, include);
+			query = query.Include(include);
 		}
 		if (spec.OrderBy != null)
 		{

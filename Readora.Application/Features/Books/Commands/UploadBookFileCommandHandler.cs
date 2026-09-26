@@ -22,7 +22,7 @@ public class UploadBookFileCommandHandler : IRequestHandler<UploadBookFileComman
 
 	public async Task<Result<string>> Handle(UploadBookFileCommand request, CancellationToken cancellationToken)
 	{
-		Book book = await _unitOfWork.Repository<Book>().GetByIdAsync(request.BookId, cancellationToken);
+		var book = await _unitOfWork.Repository<Book>().GetByIdAsync(request.BookId, cancellationToken);
 		if (book == null)
 		{
 			return Result.Failure<string>(Error.NotFound("Books.NotFound", "Book not found."));

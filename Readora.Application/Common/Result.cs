@@ -41,7 +41,7 @@ public class Result
 
 	public static Result<TValue> Failure<TValue>(Error error)
 	{
-		return new Result<TValue>(default, isSuccess: false, error);
+		return new Result<TValue>(default!, isSuccess: false, error);
 	}
 }
 public class Result<TValue> : Result

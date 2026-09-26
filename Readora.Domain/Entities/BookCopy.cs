@@ -15,7 +15,7 @@ public class BookCopy : BaseEntity
 
 	public BookCopyStatus Status { get; set; } = BookCopyStatus.Available;
 
-	public byte[] RowVersion { get; set; } = Array.Empty<byte>();
+	public byte[] RowVersion { get; set; } = Guid.NewGuid().ToByteArray();
 
-	public ICollection<Borrowing> Borrowings { get; set; } = new List<Borrowing>();
+    public ICollection<Borrowing> Borrowings { get; set; } = new List<Borrowing>();
 }

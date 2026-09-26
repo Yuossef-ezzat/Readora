@@ -18,7 +18,7 @@ public class DeleteAuthorCommandHandler : IRequestHandler<DeleteAuthorCommand, R
 
 	public async Task<Result> Handle(DeleteAuthorCommand request, CancellationToken cancellationToken)
 	{
-		Author author = await _unitOfWork.Repository<Author>().GetByIdAsync(request.Id, cancellationToken);
+		var author = await _unitOfWork.Repository<Author>().GetByIdAsync(request.Id, cancellationToken);
 		if (author == null)
 		{
 			return Result.Failure(Error.NotFound("Authors.NotFound", "Author not found."));

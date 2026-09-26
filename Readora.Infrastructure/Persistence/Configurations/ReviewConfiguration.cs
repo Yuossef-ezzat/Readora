@@ -11,12 +11,12 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {
 	public void Configure(EntityTypeBuilder<Review> builder)
 	{
-		builder.Property<int>((Expression<Func<Review, int>>)((Review r) => r.Rating)).IsRequired(true);
-		builder.Property<string>((Expression<Func<Review, string>>)((Review r) => r.Comment)).HasMaxLength(1000);
-		builder.HasIndex((Expression<Func<Review, object>>)((Review r) => new { r.UserId, r.BookId })).IsUnique(true);
-		builder.HasOne<ApplicationUser>((Expression<Func<Review, ApplicationUser>>)((Review r) => r.User)).WithMany((Expression<Func<ApplicationUser, IEnumerable<Review>>>)((ApplicationUser u) => u.Reviews)).HasForeignKey((Expression<Func<Review, object>>)((Review r) => r.UserId))
+		builder.Property(r => r.Rating).IsRequired(true);
+		builder.Property(r => r.Comment).HasMaxLength(1000);
+		builder.HasIndex(r => new { r.UserId, r.BookId }).IsUnique(true);
+		builder.HasOne(r => r.User).WithMany(u => u.Reviews).HasForeignKey(r => r.UserId)
 			.OnDelete((DeleteBehavior)1);
-		builder.HasOne<Book>((Expression<Func<Review, Book>>)((Review r) => r.Book)).WithMany((Expression<Func<Book, IEnumerable<Review>>>)((Book b) => b.Reviews)).HasForeignKey((Expression<Func<Review, object>>)((Review r) => r.BookId))
+		builder.HasOne(r => r.Book).WithMany(b => b.Reviews).HasForeignKey(r => r.BookId)
 			.OnDelete((DeleteBehavior)3);
 	}
 }

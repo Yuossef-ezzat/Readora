@@ -20,8 +20,8 @@ public class AddBookToWishlistCommandHandler : IRequestHandler<AddBookToWishlist
 
 	public async Task<Result> Handle(AddBookToWishlistCommand request, CancellationToken cancellationToken)
 	{
-		WishlistWithItemsSpecification spec = new WishlistWithItemsSpecification(request.UserId);
-		Wishlist wishlist = (await _unitOfWork.Repository<Wishlist>().ListAsync(spec, cancellationToken)).FirstOrDefault();
+		var spec = new WishlistWithItemsSpecification(request.UserId);
+		var wishlist = (await _unitOfWork.Repository<Wishlist>().ListAsync(spec, cancellationToken)).FirstOrDefault();
 		if (wishlist == null)
 		{
 			wishlist = new Wishlist

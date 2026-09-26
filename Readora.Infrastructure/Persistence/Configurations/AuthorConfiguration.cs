@@ -10,7 +10,7 @@ public class AuthorConfiguration : IEntityTypeConfiguration<Author>
 {
 	public void Configure(EntityTypeBuilder<Author> builder)
 	{
-		builder.Property<string>((Expression<Func<Author, string>>)((Author a) => a.Name)).IsRequired(true).HasMaxLength(100);
-		builder.Property<string>((Expression<Func<Author, string>>)((Author a) => a.Bio)).HasMaxLength(1000);
+		builder.Property(a => a.Name).IsRequired(true).HasMaxLength(100);
+		builder.Property(a => a.Bio).HasMaxLength(1000);
 	}
 }

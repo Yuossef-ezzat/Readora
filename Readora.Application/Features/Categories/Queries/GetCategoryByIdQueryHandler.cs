@@ -19,7 +19,7 @@ public class GetCategoryByIdQueryHandler : IRequestHandler<GetCategoryByIdQuery,
 
 	public async Task<Result<CategoryDto>> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
 	{
-		Category category = await _unitOfWork.Repository<Category>().GetByIdAsync(request.Id, cancellationToken);
+		var category = await _unitOfWork.Repository<Category>().GetByIdAsync(request.Id, cancellationToken);
 		if (category == null)
 		{
 			return Result.Failure<CategoryDto>(Error.NotFound("Categories.NotFound", "Category not found."));

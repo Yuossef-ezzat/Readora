@@ -8,7 +8,7 @@ namespace Readora.Application.Features.Authors.Queries;
 public class AuthorsSpecification : BaseSpecification<Author>
 {
 	public AuthorsSpecification(string? searchTerm, int? page, int? pageSize)
-		: base(string.IsNullOrEmpty(searchTerm) ? null : ((Expression<Func<Author, bool>>)((Author a) => a.Name.Contains(searchTerm))))
+		: base(string.IsNullOrEmpty(searchTerm) ? null :  a=> a.Name.Contains(searchTerm))
 	{
 		if (page.HasValue && pageSize.HasValue)
 		{

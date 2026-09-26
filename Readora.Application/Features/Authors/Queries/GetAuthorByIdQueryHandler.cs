@@ -19,7 +19,7 @@ public class GetAuthorByIdQueryHandler : IRequestHandler<GetAuthorByIdQuery, Res
 
 	public async Task<Result<AuthorDto>> Handle(GetAuthorByIdQuery request, CancellationToken cancellationToken)
 	{
-		Author author = await _unitOfWork.Repository<Author>().GetByIdAsync(request.Id, cancellationToken);
+		var author = await _unitOfWork.Repository<Author>().GetByIdAsync(request.Id, cancellationToken);
 		if (author == null)
 		{
 			return Result.Failure<AuthorDto>(Error.NotFound("Authors.NotFound", "Author not found."));

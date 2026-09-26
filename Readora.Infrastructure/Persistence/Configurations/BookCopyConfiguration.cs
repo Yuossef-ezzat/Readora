@@ -11,10 +11,10 @@ public class BookCopyConfiguration : IEntityTypeConfiguration<BookCopy>
 {
 	public void Configure(EntityTypeBuilder<BookCopy> builder)
 	{
-		builder.Property<string>((Expression<Func<BookCopy, string>>)((BookCopy bc) => bc.CopyNumber)).IsRequired(true).HasMaxLength(50);
-		builder.HasIndex((Expression<Func<BookCopy, object>>)((BookCopy bc) => new { bc.BookId, bc.CopyNumber })).IsUnique(true);
-		builder.HasOne<Book>((Expression<Func<BookCopy, Book>>)((BookCopy bc) => bc.Book)).WithMany((Expression<Func<Book, IEnumerable<BookCopy>>>)((Book b) => b.Copies)).HasForeignKey((Expression<Func<BookCopy, object>>)((BookCopy bc) => bc.BookId))
-			.OnDelete((DeleteBehavior)3);
-		builder.Property<byte[]>((Expression<Func<BookCopy, byte[]>>)((BookCopy bc) => bc.RowVersion)).IsRowVersion().IsRequired(true);
+		builder.Property(bc => bc.CopyNumber).IsRequired(true).HasMaxLength(50);
+		builder.HasIndex(bc => new { bc.BookId, bc.CopyNumber }).IsUnique(true);
+		builder.HasOne(bc => bc.Book).WithMany(b => b.Copies).HasForeignKey(bc => bc.BookId)
+			.OnDelete(DeleteBehavior.Cascade);
+		builder.Property(bc => bc.RowVersion).IsConcurrencyToken().ValueGeneratedNever().IsRequired(true);
 	}
 }

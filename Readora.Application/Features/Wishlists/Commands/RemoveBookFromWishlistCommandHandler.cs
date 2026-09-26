@@ -19,13 +19,13 @@ public class RemoveBookFromWishlistCommandHandler : IRequestHandler<RemoveBookFr
 
 	public async Task<Result> Handle(RemoveBookFromWishlistCommand request, CancellationToken cancellationToken)
 	{
-		WishlistWithItemsSpecification spec = new WishlistWithItemsSpecification(request.UserId);
-		Wishlist wishlist = (await _unitOfWork.Repository<Wishlist>().ListAsync(spec, cancellationToken)).FirstOrDefault();
+		var spec = new WishlistWithItemsSpecification(request.UserId);
+		var wishlist = (await _unitOfWork.Repository<Wishlist>().ListAsync(spec, cancellationToken)).FirstOrDefault();
 		if (wishlist == null)
 		{
 			return Result.Failure(Error.NotFound("Wishlist.NotFound", "Wishlist not found."));
 		}
-		WishlistItem item = wishlist.Items.FirstOrDefault((WishlistItem i) => i.BookId == request.BookId);
+		var item = wishlist.Items.FirstOrDefault((WishlistItem i) => i.BookId == request.BookId);
 		if (item == null)
 		{
 			return Result.Failure(Error.NotFound("Wishlist.ItemNotFound", "Book is not in the wishlist."));

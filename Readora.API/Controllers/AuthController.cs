@@ -56,15 +56,9 @@ public class AuthController : ControllerBase
 		return (await _authService.ForgotPasswordAsync(email)).ToActionResult();
 	}
 
-	[HttpPost("verify-otp")]
-	public async Task<IActionResult> VerifyOtp(VerifyOtpRequestDto request)
-	{
-		return (await _authService.VerifyOtpAsync(request)).ToActionResult();
-	}
-
 	[HttpPost("reset-password")]
 	public async Task<IActionResult> ResetPassword(ResetPasswordRequestDto request)
 	{
-		return (await _authService.ResetPasswordAsync(request)).ToActionResult();
+        return (await _authService.ResetPasswordAsync(request)).ToActionResult();
 	}
 }

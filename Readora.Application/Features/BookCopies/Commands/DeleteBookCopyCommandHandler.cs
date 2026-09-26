@@ -18,7 +18,7 @@ public class DeleteBookCopyCommandHandler : IRequestHandler<DeleteBookCopyComman
 
 	public async Task<Result> Handle(DeleteBookCopyCommand request, CancellationToken cancellationToken)
 	{
-		BookCopy bookCopy = await _unitOfWork.Repository<BookCopy>().GetByIdAsync(request.Id, cancellationToken);
+		var bookCopy = await _unitOfWork.Repository<BookCopy>().GetByIdAsync(request.Id, cancellationToken);
 		if (bookCopy == null)
 		{
 			return Result.Failure(Error.NotFound("BookCopies.NotFound", "Book copy not found."));

@@ -19,14 +19,15 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 
 	public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
 	{
-		if (!(request is ICacheableQuery cacheableQuery))
+		if (request is not ICacheableQuery cacheableQuery)
 		{
 			return await next();
 		}
-		string cachedResponse = await _cache.GetStringAsync(cacheableQuery.CacheKey, cancellationToken);
+		string? cachedResponse = await _cache.GetStringAsync(cacheableQuery.CacheKey, cancellationToken);
 		if (!string.IsNullOrEmpty(cachedResponse))
 		{
-			return JsonSerializer.Deserialize<TResponse>(cachedResponse);
+			var cacheResponse = JsonSerializer.Deserialize<TResponse>(cachedResponse);
+			if (cacheResponse != null)  return cacheResponse; 
 		}
 		var response = await next();
 		if (response != null)

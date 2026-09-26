@@ -19,12 +19,12 @@ public class GetBookByIdQueryHandler : IRequestHandler<GetBookByIdQuery, Result<
 
 	public async Task<Result<BookDto>> Handle(GetBookByIdQuery request, CancellationToken cancellationToken)
 	{
-		Book book = await _unitOfWork.Repository<Book>().GetByIdAsync(request.Id, cancellationToken);
+		var book = await _unitOfWork.Repository<Book>().GetByIdAsync(request.Id, cancellationToken);
 		if (book == null)
 		{
 			return Result.Failure<BookDto>(Error.NotFound("Books.NotFound", $"Book with Id {request.Id} not found."));
 		}
-		BookDto dto = new BookDto
+		var dto = new BookDto
 		{
 			Id = book.Id,
 			Title = book.Title,

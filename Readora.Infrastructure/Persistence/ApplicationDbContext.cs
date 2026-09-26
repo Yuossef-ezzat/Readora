@@ -8,34 +8,33 @@ namespace Readora.Infrastructure.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
 {
-	public DbSet<Author> Authors => ((DbContext)this).Set<Author>();
+	public DbSet<Author> Authors => Set<Author>();
 
-	public DbSet<Category> Categories => ((DbContext)this).Set<Category>();
+	public DbSet<Category> Categories => Set<Category>();
 
-	public DbSet<Book> Books => ((DbContext)this).Set<Book>();
+	public DbSet<Book> Books => Set<Book>();
 
-	public DbSet<BookCopy> BookCopies => ((DbContext)this).Set<BookCopy>();
+	public DbSet<BookCopy> BookCopies => Set<BookCopy>();
+	public DbSet<Borrowing> Borrowings => Set<Borrowing>();
 
-	public DbSet<Borrowing> Borrowings => ((DbContext)this).Set<Borrowing>();
+	public DbSet<Review> Reviews => Set<Review>();
 
-	public DbSet<Review> Reviews => ((DbContext)this).Set<Review>();
+	public DbSet<Wishlist> Wishlists => Set<Wishlist>();
 
-	public DbSet<Wishlist> Wishlists => ((DbContext)this).Set<Wishlist>();
+	public DbSet<WishlistItem> WishlistItems => Set<WishlistItem>();
 
-	public DbSet<WishlistItem> WishlistItems => ((DbContext)this).Set<WishlistItem>();
+	public DbSet<Notification> Notifications => Set<Notification>();
 
-	public DbSet<Notification> Notifications => ((DbContext)this).Set<Notification>();
-
-	public DbSet<RefreshToken> RefreshTokens => ((DbContext)this).Set<RefreshToken>();
+	public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-		: base((DbContextOptions)(object)options)
+		: base(options)
 	{
 	}
 
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
 		base.OnModelCreating(builder);
-		builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly, (Func<Type, bool>)null);
+		builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 	}
 }

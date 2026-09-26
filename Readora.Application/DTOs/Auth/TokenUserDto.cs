@@ -3,9 +3,9 @@ namespace Readora.Application.DTOs.Auth
 {
     public class TokenUserDto
     {
-        public string Email { get; set; }
-        public int UserId { get; set; }
-        public string Role { get; set; }
+        public string Email { get; set; } = null!; 
+        public int UserId { get; set; } 
+        public string Role { get; set; } = null!;
 
     }
     public class GeneratedRefreshTokenDto

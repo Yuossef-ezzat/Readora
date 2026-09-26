@@ -8,7 +8,7 @@ using Readora.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace Readora.Infrastructure.Persistence.Migrations
+namespace Readora.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -250,7 +250,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.Book", b =>
@@ -299,7 +299,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
                     b.HasIndex("ISBN")
                         .IsUnique();
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.BookCopy", b =>
@@ -332,7 +332,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
                     b.HasIndex("BookId", "CopyNumber")
                         .IsUnique();
 
-                    b.ToTable("BookCopies", (string)null);
+                    b.ToTable("BookCopies");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.Borrowing", b =>
@@ -367,7 +367,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Borrowings", (string)null);
+                    b.ToTable("Borrowings");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.Category", b =>
@@ -392,7 +392,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.Notification", b =>
@@ -429,7 +429,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.RefreshToken", b =>
@@ -463,7 +463,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.Review", b =>
@@ -497,7 +497,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId", "BookId")
                         .IsUnique();
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.Wishlist", b =>
@@ -516,7 +516,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wishlists", (string)null);
+                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("Readora.Domain.Entities.WishlistItem", b =>
@@ -543,7 +543,7 @@ namespace Readora.Infrastructure.Persistence.Migrations
                     b.HasIndex("WishlistId", "BookId")
                         .IsUnique();
 
-                    b.ToTable("WishlistItems", (string)null);
+                    b.ToTable("WishlistItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

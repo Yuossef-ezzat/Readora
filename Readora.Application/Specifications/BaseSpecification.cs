@@ -26,7 +26,7 @@ public abstract class BaseSpecification<T> : ISpecification<T> where T : BaseEnt
 	{
 	}
 
-	protected BaseSpecification(Expression<Func<T, bool>> criteria)
+	protected BaseSpecification(Expression<Func<T, bool>>? criteria)
 	{
 		Criteria = criteria;
 	}

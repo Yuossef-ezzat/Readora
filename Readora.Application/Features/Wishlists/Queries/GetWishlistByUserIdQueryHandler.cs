@@ -22,8 +22,8 @@ public class GetWishlistByUserIdQueryHandler : IRequestHandler<GetWishlistByUser
 
 	public async Task<Result<WishlistDto>> Handle(GetWishlistByUserIdQuery request, CancellationToken cancellationToken)
 	{
-		WishlistWithItemsSpecification spec = new WishlistWithItemsSpecification(request.UserId);
-		Wishlist wishlist = (await _unitOfWork.Repository<Wishlist>().ListAsync(spec, cancellationToken)).FirstOrDefault();
+		var spec = new WishlistWithItemsSpecification(request.UserId);
+		var wishlist = (await _unitOfWork.Repository<Wishlist>().ListAsync(spec, cancellationToken)).FirstOrDefault();
 		if (wishlist == null)
 		{
 			return Result.Success(new WishlistDto
@@ -32,7 +32,7 @@ public class GetWishlistByUserIdQueryHandler : IRequestHandler<GetWishlistByUser
 				Items = new List<WishlistItemDto>()
 			});
 		}
-		WishlistDto dto = new WishlistDto
+		var dto = new WishlistDto
 		{
 			Id = wishlist.Id,
 			UserId = wishlist.UserId,

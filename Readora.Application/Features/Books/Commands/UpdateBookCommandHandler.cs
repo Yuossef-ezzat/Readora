@@ -18,7 +18,7 @@ public class UpdateBookCommandHandler : IRequestHandler<UpdateBookCommand, Resul
 
 	public async Task<Result> Handle(UpdateBookCommand request, CancellationToken cancellationToken)
 	{
-		Book book = await _unitOfWork.Repository<Book>().GetByIdAsync(request.Id, cancellationToken);
+		var book = await _unitOfWork.Repository<Book>().GetByIdAsync(request.Id, cancellationToken);
 		if (book == null)
 		{
 			return Result.Failure(Error.NotFound("Books.NotFound", $"Book with Id {request.Id} not found."));

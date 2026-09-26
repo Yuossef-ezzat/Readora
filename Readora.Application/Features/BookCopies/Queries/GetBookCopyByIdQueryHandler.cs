@@ -19,7 +19,7 @@ public class GetBookCopyByIdQueryHandler : IRequestHandler<GetBookCopyByIdQuery,
 
 	public async Task<Result<BookCopyDto>> Handle(GetBookCopyByIdQuery request, CancellationToken cancellationToken)
 	{
-		BookCopy bookCopy = await _unitOfWork.Repository<BookCopy>().GetByIdAsync(request.Id, cancellationToken);
+		var bookCopy = await _unitOfWork.Repository<BookCopy>().GetByIdAsync(request.Id, cancellationToken);
 		if (bookCopy == null)
 		{
 			return Result.Failure<BookCopyDto>(Error.NotFound("BookCopies.NotFound", "Book copy not found."));

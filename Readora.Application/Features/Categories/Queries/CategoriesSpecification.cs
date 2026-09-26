@@ -8,7 +8,7 @@ namespace Readora.Application.Features.Categories.Queries;
 public class CategoriesSpecification : BaseSpecification<Category>
 {
 	public CategoriesSpecification(string? searchTerm, int? page, int? pageSize)
-		: base(string.IsNullOrEmpty(searchTerm) ? null : ((Expression<Func<Category, bool>>)((Category c) => c.Name.Contains(searchTerm))))
+		: base(string.IsNullOrEmpty(searchTerm) ? null : c => c.Name.Contains(searchTerm))
 	{
 		if (page.HasValue && pageSize.HasValue)
 		{

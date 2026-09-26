@@ -18,7 +18,7 @@ public class UpdateBookCopyCommandHandler : IRequestHandler<UpdateBookCopyComman
 
 	public async Task<Result> Handle(UpdateBookCopyCommand request, CancellationToken cancellationToken)
 	{
-		BookCopy bookCopy = await _unitOfWork.Repository<BookCopy>().GetByIdAsync(request.Id, cancellationToken);
+		var bookCopy = await _unitOfWork.Repository<BookCopy>().GetByIdAsync(request.Id, cancellationToken);
 		if (bookCopy == null)
 		{
 			return Result.Failure(Error.NotFound("BookCopies.NotFound", "Book copy not found."));

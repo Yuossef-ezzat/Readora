@@ -19,7 +19,7 @@ public class GetBorrowingByIdQueryHandler : IRequestHandler<GetBorrowingByIdQuer
 
 	public async Task<Result<BorrowingDto>> Handle(GetBorrowingByIdQuery request, CancellationToken cancellationToken)
 	{
-		Borrowing borrowing = await _unitOfWork.Repository<Borrowing>().GetByIdAsync(request.Id, cancellationToken);
+		var borrowing = await _unitOfWork.Repository<Borrowing>().GetByIdAsync(request.Id, cancellationToken);
 		if (borrowing == null)
 		{
 			return Result.Failure<BorrowingDto>(Error.NotFound("Borrowings.NotFound", "Borrowing not found."));
