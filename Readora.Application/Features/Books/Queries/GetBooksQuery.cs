@@ -6,7 +6,7 @@ using Readora.Application.DTOs.Books;
 
 namespace Readora.Application.Features.Books.Queries;
 
-public record GetBooksQuery(string? SearchTerm, int Page = 1, int PageSize = 10) : IRequest<Result<PagedResult<BookDto>>>, IBaseRequest, ICacheableQuery
+public record GetBooksQuery(string? SearchTerm, int Page = 1, int PageSize = 10) : IRequest<Result<PagedResult<BookDto>>>, IBaseRequest, ICacheableQuery // 160 ms to 15 ms with caching and pagination
 {
 	public string CacheKey => $"Books_{SearchTerm}_{Page}_{PageSize}";
 

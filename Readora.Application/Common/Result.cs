@@ -1,10 +1,15 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace Readora.Application.Common;
 
 public class Result
 {
-	public bool IsSuccess { get; }
+    public Result()
+    {
+        
+    }
+    public bool IsSuccess { get; }
 
 	public bool IsFailure => !IsSuccess;
 
@@ -12,11 +17,11 @@ public class Result
 
 	protected internal Result(bool isSuccess, Error error)
 	{
-		if (isSuccess && error != Readora.Application.Common.Error.None)
+		if (isSuccess && error != Error.None)
 		{
 			throw new InvalidOperationException();
 		}
-		if (!isSuccess && error == Readora.Application.Common.Error.None)
+		if (!isSuccess && error == Error.None)
 		{
 			throw new InvalidOperationException();
 		}
@@ -26,12 +31,12 @@ public class Result
 
 	public static Result Success()
 	{
-		return new Result(isSuccess: true, Readora.Application.Common.Error.None);
+		return new Result(isSuccess: true, Error.None);
 	}
 
 	public static Result<TValue> Success<TValue>(TValue value)
 	{
-		return new Result<TValue>(value, isSuccess: true, Readora.Application.Common.Error.None);
+		return new Result<TValue>(value, isSuccess: true, Error.None);
 	}
 
 	public static Result Failure(Error error)
@@ -56,11 +61,16 @@ public class Result<TValue> : Result
 			{
 				throw new InvalidOperationException("The value of a failure result can not be accessed.");
 			}
+
 			return _value;
 		}
 	}
-
-	protected internal Result(TValue value, bool isSuccess, Error error)
+	[JsonConstructor]
+    public Result(TValue value): base(isSuccess: true, Error.None)
+    {
+		_value = value;
+    }
+    protected internal Result(TValue value, bool isSuccess, Error error)
 		: base(isSuccess, error)
 	{
 		_value = value;

@@ -141,7 +141,13 @@ public static class DatabaseSeeder
                 new Author { Name = "Yuval Noah Harari", Bio = "Israeli historian and author of Sapiens." },
                 new Author { Name = "Robert C. Martin", Bio = "Software engineer, author of Clean Code." },
                 new Author { Name = "J.K. Rowling", Bio = "British author of the Harry Potter series." },
-                new Author { Name = "Dale Carnegie", Bio = "American writer and lecturer on self-improvement." }
+                new Author { Name = "Dale Carnegie", Bio = "American writer and lecturer on self-improvement." },
+
+                new Author { Name = "John Orwell", Bio = "English novelist, known for 1984 and Animal Farm." },
+                new Author { Name = "Reacher Noah Harari", Bio = "Israeli historian and author of Sapiens." },
+                new Author { Name = "Neagly C. Martin", Bio = "Software engineer, author of Clean Code." },
+                new Author { Name = "Nagib Rowling", Bio = "British author of the Harry Potter series." },
+                new Author { Name = "Shouky Carnegie", Bio = "American writer and lecturer on self-improvement." }
             );
             await context.SaveChangesAsync();
         }
@@ -157,6 +163,12 @@ public static class DatabaseSeeder
             var rowling = await context.Authors.FirstAsync(a => a.Name == "J.K. Rowling");
             var carnegie = await context.Authors.FirstAsync(a => a.Name == "Dale Carnegie");
 
+            var john = await context.Authors.FirstAsync(a => a.Name == "John Orwell");
+            var reacher = await context.Authors.FirstAsync(a => a.Name == "Reacher Noah Harari");
+            var neagky = await context.Authors.FirstAsync(a => a.Name == "Neagly C. Martin");
+            var nagib = await context.Authors.FirstAsync(a => a.Name == "Nagib Rowling");
+            var shouky = await context.Authors.FirstAsync(a => a.Name == "Shouky Carnegie");
+
             var fiction = await context.Categories.FirstAsync(c => c.Name == "Fiction");
             var history = await context.Categories.FirstAsync(c => c.Name == "History & Biography");
             var sciTech = await context.Categories.FirstAsync(c => c.Name == "Science & Technology");
@@ -167,7 +179,13 @@ public static class DatabaseSeeder
                 new Book { Title = "Sapiens", ISBN = "978-0062316097", AuthorId = harari.Id, CategoryId = history.Id, PublishedDate = new DateTime(2011, 1, 1).ToUniversalTime() },
                 new Book { Title = "Clean Code", ISBN = "978-0132350884", AuthorId = martin.Id, CategoryId = sciTech.Id, PublishedDate = new DateTime(2008, 8, 1).ToUniversalTime() },
                 new Book { Title = "Harry Potter & Stone", ISBN = "978-0439708180", AuthorId = rowling.Id, CategoryId = fiction.Id, PublishedDate = new DateTime(1997, 6, 26).ToUniversalTime() },
-                new Book { Title = "How to Win Friends", ISBN = "978-0671027032", AuthorId = carnegie.Id, CategoryId = selfDev.Id, PublishedDate = new DateTime(1936, 10, 1).ToUniversalTime() }
+                new Book { Title = "How to Win Friends", ISBN = "978-0671027032", AuthorId = carnegie.Id, CategoryId = selfDev.Id, PublishedDate = new DateTime(1936, 10, 1).ToUniversalTime() },
+
+                new Book { Title = "1977", ISBN = "978-0451524936", AuthorId = john.Id, CategoryId = fiction.Id, PublishedDate = new DateTime(1979, 6, 8).ToUniversalTime() },
+                new Book { Title = "War Machine", ISBN = "978-0062316098", AuthorId = reacher.Id, CategoryId = history.Id, PublishedDate = new DateTime(2010, 1, 1).ToUniversalTime() },
+                new Book { Title = "Clean Architecture", ISBN = "978-0132350885", AuthorId = neagky.Id, CategoryId = sciTech.Id, PublishedDate = new DateTime(2005, 8, 1).ToUniversalTime() },
+                new Book { Title = "Harry Potter 2e", ISBN = "978-0439708181", AuthorId = nagib.Id, CategoryId = fiction.Id, PublishedDate = new DateTime(1797, 6, 26).ToUniversalTime() },
+                new Book { Title = "How to Lose Friends", ISBN = "978-0671027033", AuthorId = shouky.Id, CategoryId = selfDev.Id, PublishedDate = new DateTime(1946, 10, 1).ToUniversalTime() }
             );
             await context.SaveChangesAsync();
         }

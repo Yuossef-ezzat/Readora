@@ -23,19 +23,22 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 		{
 			return await next();
 		}
-		string? cachedResponse = await _cache.GetStringAsync(cacheableQuery.CacheKey, cancellationToken);
+		var cachedResponse = await _cache.GetStringAsync(cacheableQuery.CacheKey, cancellationToken);
 		if (!string.IsNullOrEmpty(cachedResponse))
 		{
-			var cacheResponse = JsonSerializer.Deserialize<TResponse>(cachedResponse);
+			var cacheResponse = JsonSerializer.Deserialize<TResponse>(cachedResponse , new JsonSerializerOptions { PropertyNameCaseInsensitive = true});
 			if (cacheResponse != null)  return cacheResponse; 
 		}
 		var response = await next();
-		if (response != null)
+		if(response is Result result && result.IsSuccess)
 		{
-			await DistributedCacheExtensions.SetStringAsync(options: new DistributedCacheEntryOptions
+			if (response != null)
 			{
-				AbsoluteExpirationRelativeToNow = (cacheableQuery.Expiration ?? TimeSpan.FromMinutes(10L))
-			}, cache: _cache, key: cacheableQuery.CacheKey, value: JsonSerializer.Serialize(response), token: cancellationToken);
+				await DistributedCacheExtensions.SetStringAsync(options: new DistributedCacheEntryOptions
+				{
+					AbsoluteExpirationRelativeToNow = cacheableQuery.Expiration ?? TimeSpan.FromMinutes(10L)
+				}, cache: _cache, key: cacheableQuery.CacheKey, value: JsonSerializer.Serialize(response), token: cancellationToken);
+			}
 		}
 		return response;
 	}
